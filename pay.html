@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="keywords" content="Bangladeshi Payment Gateway,DBBL Nexsus, VISA, Master, Amex, American Express, qCash, bKash">
+      <meta name="description" content="Secure Paymnet gateway">
+      <meta name="author" content="Mukter Payment Gateway">
+      <link rel="icon" href="b.png" sizes="32x32">
+      <link rel="icon" href="b.png" sizes="192x192">
+      <link rel="apple-touch-icon-precomposed" href="b.png">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap">
+      <link rel="stylesheet" href="stylesheet.css">
+      <link rel="stylesheet" href="utils.css">
+      <meta name="robots" content="noindex, nofollow">
+      <title>SecureCheckout | Mukter</title>
+      <script>
+         function getParameterByName(name, url) {
+             if (!url) url = window.location.href;
+             name = name.replace(/[\[\]]/g, "\\$&");
+             var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                 results = regex.exec(url);
+             if (!results) return null;
+             if (!results[2]) return '';
+             return decodeURIComponent(results[2].replace(/\+/g, " "));
+         }
+         
+         var bkashEnabled = getParameterByName('bkash') === 'true';
+         var nagadEnabled = getParameterByName('nagad') === 'true';
+         var rocketEnabled = getParameterByName('rocket') === 'true';
+         var upayEnabled = getParameterByName('upay') === 'true';
+         var telegramUsername = getParameterByName('telegramUsername') || 'bohudur';
+         var supportEmail = getParameterByName('supportEmail') || '';
+         
+         var paymentFrom = getParameterByName('paymentFrom') || 'Mr. ABC';
+         var paymentTo = getParameterByName('paymentTo') || 'Mr. ABC';
+         var amount = getParameterByName('amount') || '10.00';
+         var api = getParameterByName('api') || '';
+         var base_url = getParameterByName('base_url') || '';
+         var auth_domain = getParameterByName('auth_domain') || '';
+         var email = getParameterByName('email') || '';
+         var password = getParameterByName('password') || '';
+         var bkash_number = getParameterByName('bkash_number') || '';
+         var nagad_number = getParameterByName('nagad_number') || '';
+         var rocket_number = getParameterByName('rocket_number') || '';
+         var upay_number = getParameterByName('upay_number') || '';
+         var bohudur_id = getParameterByName('bohudur_id') || '';
+         
+         function togglePaymentOption(option, isEnabled) {
+             var element = document.getElementById(option);
+             if (element) {
+                 if (isEnabled) {
+                     element.style.display = 'block';
+                 } else {
+                     element.style.display = 'none';
+                 }
+             }
+         }
+         
+         function setPaymentDetails() {
+             document.getElementById('paymentFromValue').innerText = paymentFrom;
+             document.getElementById('paymentToValue').innerText = paymentTo;
+             document.getElementById('amountValue').innerText = amount;
+             document.querySelector('.col-12.pay').innerHTML = `<span style='font-size:12px;color:yellow;'></span><br>Pay BDT ${amount}`;
+         }
+         
+         window.onload = function () {
+             togglePaymentOption('bkashOption', bkashEnabled);
+             togglePaymentOption('nagadOption', nagadEnabled);
+             togglePaymentOption('rocketOption', rocketEnabled);
+             togglePaymentOption('upayOption', upayEnabled);
+         
+             setPaymentDetails();
+         };
+      </script>
+   </head>
+   <body>
+      <div class="container aa_sec">
+         <div class="row">
+            <div class="col-12 offset-0 col-lg-6 offset-lg-3">
+               <div align="center">
+                  <div class="card body-card">
+                     <div align="center">
+                        <div class="logo">
+                           <a href="#" title="mukter">
+                              <div class="ratio img-responsive img-circle" style="background-image: url('https://i.ibb.co.com/xHWCm5P/muk.png');">
+                              </div>
+                           </a>
+                        </div>
+                     </div>
+                     <div class="card-body prl-0 pb-0">
+                        <h5 class="card-title prl-15">MUKTER Payment</h5>
+                        <div class="row pt-20 prl-15">
+                           <div class="col-12">
+                              <table>
+                                 <tr>
+                                    <td class="text-center prl-cus-15">
+                                       <a href="#" id="supportbtn" title="Support">
+                                          <div class="icon">
+                                             <span>
+                                             <img class="top-options-img" src="support.png" alt="Support">
+                                             </span>
+                                          </div>
+                                          <p class="mt-2" id="support-text">Support</p>
+                                          <p id="bangla-support-text" hidden>а¦ёа¦ѕа¦Єа§‹а¦°а§Ќа¦џ</p>
+                                       </a>
+                                    </td>
+                                    <td class="text-center prl-15">
+                                       <a href="#" id="faqbtn" title="FAQ">
+                                          <div class="icon">
+                                             <span>
+                                             <img class="top-options-img" src="help.png" alt="FAQ">
+                                             </span>
+                                          </div>
+                                          <p class="mt-2" id="faq-support-text">FAQ</p>
+                                          <p class="mt-2" id="bangla-faq-support-text" hidden>а¦¤а¦Ґа§Ќа¦Їа¦ѕа¦¦а¦ї</p>
+                                       </a>
+                                    </td>
+                                    <td class="text-center prl-15">
+                                       <a href="#" id="translatebtn" title="Translate">
+                                          <div class="icon">
+                                             <span>
+                                             <img class="top-options-img" src="language.png" alt="Translate">
+                                             </span>
+                                          </div>
+                                          <p class="mt-2" id="translate-support-text">Translate</p>
+                                          <p id="bangla-translate-support-text" hidden>а¦…а¦Ёа§Ѓа¦¬а¦ѕа¦¦</p>
+                                       </a>
+                                    </td>
+                                    <td class="text-center prl-15">
+                                       <a href="#" id="detailsbtn" title="Details">
+                                          <div class="icon">
+                                             <span>
+                                             <img class="top-options-img" src="info.png" alt="Translate">
+                                             </span>
+                                          </div>
+                                          <p class="mt-2" id="details-text">Details</p>
+                                          <p id="bangla-details-text" hidden>а¦¬а¦їа¦ёа§Ќа¦¤а¦ѕа¦°а¦їа¦¤</p>
+                                       </a>
+                                    </td>
+                                 </tr>
+                              </table>
+                           </div>
+                        </div>
+                        <div id="main_body">
+                           <div class="mbdiv">
+                              <div id="card" class="mt-3 prl-0 sectionBtn optionsMobile mbdiv">
+                                 <div class="mb-div">
+                                    <span class="mbtext">Mobile Banking Supported By Owner</span>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row prl-15" id="cards-sec">
+                              <div class="row prl-15 pt-20" id="cards-sec">
+                                 <div class="col-4 pgw-box text-center" id="bkashOption">
+                                    <a class="tra_logo paymentlogo" style="width: 33.33%;" title="bKash" style="width: 90%;" onclick="redirectToPayment('bkash')">
+                                    <img src="bkash.png" width="85%">
+                                    </a>
+                                 </div>
+                                 <div class="col-4 pgw-box text-center" id="nagadOption">
+                                    <a class="tra_logo paymentlogo" style="width: 33.33%;" style="width: 90%;" title="Nagad" onclick="redirectToPayment('nagad')">
+                                    <img src="nagad.png" width="85%">
+                                    </a>
+                                 </div>
+                                 <div class="col-4 pgw-box text-center" id="rocketOption">
+                                    <a class="tra_logo paymentlogo" style="width: 33.33%;" style="width: 90%;" title="Rocket" onclick="redirectToPayment('rocket')">
+                                    <img src="rsz_rocket.png" width="85%">
+                                    </a>
+                                 </div>
+                                 <div class="col-4 pgw-box text-center" id="upayOption">
+                                    <a class="tra_logo paymentlogo" style="width: 33.33%;" style="width: 90%;" title="UPAY" onclick="redirectToPayment('upay')">
+                                    <img src="upay.jpeg" width="85%">
+                                    </a>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row prl-15 pt-20" id="mobile-sec" hidden>
+                           </div>
+                        </div>
+                        <div class="row prl-15">
+                           <div class="col-12 mb-3 mt-3" id="support-sec" hidden>
+                              <div class="support-option-sec mt-2" id="support-option-sec" align="center">
+                                 <p class="text-center content-title" id="support-content-title">
+                                    If you have any question or problem then contact with us
+                                 </p>
+                                 <p class="text-center content-title" id="bangla-support-content-title" hidden>
+                                    а¦Єа§‡а¦®а§‡а¦Ёа§Ќа¦џ а¦—а§‡а¦џа¦“а¦Їа¦ја§‡а¦¤а§‡ а¦Єа§‡а¦®а§‡а¦Ёа§Ќа¦џ а¦Ёа¦їа¦Їа¦ја§‡ а¦ёа¦®а¦ёа§Ќа¦Їа¦ѕ а¦№а¦Іа§‡ а¦…а¦¬а¦¶а§Ќа¦Їа¦‡ а¦Џа¦Ўа¦®а¦їа¦Ёа§‡а¦° а¦ёа¦ѕа¦Ґа§‡ а¦Їа§‹а¦—а¦ѕа¦Їа§‹а¦— а¦•а¦°а¦¬а§‡а¦Ё
+                                 </p>
+                                 <div class="support-area" align="left">
+                                    <a id="telegramLink" href="#" target="_blank">
+                                       <div class="support-sec-content">
+                                          <img src="telegram.png">
+                                          <span id="support-chat">
+                                          Click here for Telegram live chat
+                                          </span>
+                                          <span id="bangla-support-chat" hidden>
+                                          а¦џа§‡а¦Іа¦їа¦—а§Ќа¦°а¦ѕа¦®а§‡ а¦Іа¦ѕа¦‡а¦­ а¦ља§Ќа¦Їа¦ѕа¦џа§‡а¦° а¦ња¦Ёа§Ќа¦Ї а¦Џа¦–а¦ѕа¦Ёа§‡ а¦•а§Ќа¦Іа¦їа¦• а¦•а¦°а§Ѓа¦Ё
+                                          </span>
+                                       </div>
+                                    </a>
+                                    <a id="emailLink" href="#" target="_blank">
+                                       <div class="support-sec-content">
+                                          <img src="maillogo.png">
+                                          <span id="support-mail">
+                                          Click here to email us for support
+                                          </span>
+                                          <span id="bangla-support-mail" hidden>
+                                          а¦†а¦®а¦ѕа¦¦а§‡а¦° а¦‡а¦®а§‡а¦‡а¦І а¦•а¦°а¦¤а§‡ а¦Џа¦–а¦ѕа¦Ёа§‡ а¦•а§Ќа¦Іа¦їа¦• а¦•а¦°а§Ѓа¦Ё
+                                          </span>
+                                       </div>
+                                    </a>
+                                 </div>
+                              </div>
+                           </div>
+                           </div>
+                           <div class="col-12 mb-3" id="faq-sec" hidden>
+                              <div class="faq-option-sec" id="faq-option-sec">
+                                 <div class="support-area" align="left">
+                                    <div id="accordion">
+                                       <div style="border-radius: 10px !important;" class="card mb-2">
+                                          <div id="headingTwo">
+                                             <h5 class="mb-0">
+                                                <button class="btn btn-link collapsed text-left" id="faq-title-one" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseTwo">
+                                                Will Mukter collect my information?
+                                                </button>
+                                                <button class="btn btn-link collapsed text-left" id="bangla-faq-title-one" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseTwo" hidden>
+                                                а¦¬а¦№а§Ѓа¦¦а§‚а¦° а¦•а¦ї а¦†а¦®а¦ѕа¦° а¦¤а¦Ґа§Ќа¦Ї а¦ёа¦‚а¦—а§Ќа¦°а¦№ а¦•а¦°а¦¬а§‡?
+                                                </button>
+                                             </h5>
+                                          </div>
+                                          <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion"><hr>
+                                             <div class="card-body">
+                                                <span id="faq-details-one">
+                                                No. Mukter does not collect any kind if user data. Everything is safe here.
+                                                </span>
+                                                <span id="bangla-faq-details-one" hidden>
+                                                а¦Ёа¦ѕаҐ¤ а¦¬а¦№а§Ѓа¦¦а§‚а¦° а¦•а§‹а¦Ёа§‹ а¦§а¦°а¦Ёа§‡а¦° а¦¬а§Ќа¦Їа¦¬а¦№а¦ѕа¦°а¦•а¦ѕа¦°а§Ђа¦° а¦¤а¦Ґа§Ќа¦Ї а¦ёа¦‚а¦—а§Ќа¦°а¦№ а¦•а¦°а§‡ а¦Ёа¦ѕаҐ¤ а¦Џа¦–а¦ѕа¦Ёа§‡ а¦ёа¦¬а¦•а¦їа¦›а§Ѓ а¦Ёа¦їа¦°а¦ѕа¦Єа¦¦аҐ¤
+                                                </span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div style="border-radius: 10px !important;" class="card mb-2">
+                                          <div id="headingThree">
+                                             <h5 class="mb-0">
+                                                <button class="btn btn-link collapsed text-left" id="faq-title-two" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseThree">
+                                                Will Mukter take responsibility if there is a problem with my payment?
+                                                </button>
+                                                <button class="btn btn-link collapsed text-left" id="bangla-faq-title-two" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseThree" hidden>
+                                                а¦¬а¦№а§Ѓа¦¦а§‚а¦° а¦•а¦ї а¦Єа§‡а¦®а§‡а¦Ёа§Ќа¦џ а¦†а¦®а¦ѕа¦° а¦ёа¦ѕа¦Ґа§‡ а¦•а§‹а¦Ёа§‹ а¦ёа¦®а¦ёа§Ќа¦Їа¦ѕ а¦№а¦Іа§‡ а¦¤а¦ѕа¦° а¦¦а¦ѕа¦Їа¦ј а¦Ёа¦їа¦¬а§‡?
+                                                </button>
+                                             </h5>
+                                          </div>
+                                          <div id="collapseTwo" class="collapse" aria-labelledby="headingThree" data-parent="#accordion"><hr>
+                                             <div class="card-body">
+                                                <span id="faq-details-two">
+                                                No, never. Mukter is only a personal payment automation gateway. It will not be responsible for any payment. Your payment is completely controlled by the app admin.
+                                                </span>
+                                                <span id="bangla-faq-details-two" hidden>
+                                                а¦Ёа¦ѕ, а¦•а¦–а¦Ёа§‹а¦‡ а¦Ёа¦ѕаҐ¤ а¦¬а¦№а§Ѓа¦¦а§‚а¦° а¦¶а§Ѓа¦§а§Ѓа¦®а¦ѕа¦¤а§Ќа¦° а¦Џа¦•а¦џа¦ѕ а¦Єа¦ѕа¦°а§Ќа¦ёа§‹а¦Ёа¦ѕа¦І а¦Єа§‡а¦®а§‡а¦Ёа§Ќа¦џ а¦†а¦џа§‹а¦®а§‡а¦¶а¦Ё а¦—а§‡а¦џа¦“а¦Їа¦ја§‡аҐ¤ а¦Џа¦џа¦ї а¦•а§‹а¦Ёа§‹ а¦Єа§‡а¦®а§‡а¦Ёа§Ќа¦џа§‡а¦° а¦¦а¦ѕа¦Їа¦ј а¦Ёа¦їа¦¬а§‡ а¦Ёа¦ѕаҐ¤ а¦†а¦Єа¦Ёа¦ѕа¦° а¦Єа§‡а¦®а§‡а¦Ёа§Ќа¦џа§‡а¦° а¦Ёа¦їа¦Їа¦ја¦Ёа§Ќа¦¤а§Ќа¦°а¦Ј а¦ёа¦®а§Ќа¦Єа§‚а¦°а§Ќа¦Ј а¦…а§Ќа¦Їа¦ѕа¦Єа§‡а¦° а¦Џа¦Ўа¦®а¦їа¦Ёа§‡а¦° а¦№а¦ѕа¦¤а§‡аҐ¤
+                                                </span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div style="border-radius: 10px !important;" class="card mb-2">
+                                          <div id="headingThree">
+                                             <h5 class="mb-0">
+                                                <button class="btn btn-link collapsed text-left" id="faq-title-three" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                If I can't verify the payment through Mukter, can I ask for assistance in the Mukter support group?
+                                                </button>
+                                                <button class="btn btn-link collapsed text-left" id="bangla-faq-title-three" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" hidden>
+                                                а¦†а¦®а¦ї а¦¬а¦№а§Ѓа¦¦а§‚а¦°а§‡а¦° а¦®а¦ѕа¦§а§Ќа¦Їа¦®а§‡ а¦Єа§‡а¦®а§‡а¦Ёа§Ќа¦џ а¦­а§‡а¦°а¦їа¦«а¦їа¦•а§‡а¦¶а¦Ё а¦•а¦°а¦¤а§‡ а¦Ёа¦ѕ а¦Єа¦ѕа¦°а¦Іа§‡ а¦•а¦ї а¦¬а¦№а§Ѓа¦¦а§‚а¦°а§‡а¦° а¦ёа¦ѕа¦Єа§‹а¦°а§Ќа¦џ а¦—а§Ќа¦°а§Ѓа¦Єа§‡ а¦ёа¦№а¦Їа§‹а¦—а¦їа¦¤а¦ѕ а¦ља¦ѕа¦‡а¦¤а§‡ а¦Єа¦ѕа¦°а¦¬а§‹?
+                                                </button>
+                                             </h5>
+                                          </div>
+                                          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion"><hr>
+                                             <div class="card-body">
+                                                <span id="faq-details-three">
+                                                No, you can't. In this case, ask the admin of the app.
+                                                </span>
+                                                <span id="bangla-faq-details-three" hidden>
+                                                а¦Ёа¦ѕ, а¦†а¦Єа¦Ёа¦ї а¦Єа¦ѕа¦°а¦¬а§‡а¦Ё а¦Ёа¦ѕаҐ¤ а¦Џа¦•а§Ќа¦·а§‡а¦¤а§Ќа¦°а§‡ а¦…а§Ќа¦Їа¦ѕа¦Єа§‡а¦° а¦Џа¦Ўа¦®а¦їа¦Ёа¦•а§‡ а¦ња¦їа¦ња§Ќа¦ћа¦ѕа¦ёа¦ѕ а¦•а¦°а§Ѓа¦ЁаҐ¤
+                                                </span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-12 mb-3" id="details-sec" hidden>
+                              <div class="mt-3" align="center">
+                                 <h5 class="mb-3" id="trx-title">Transaction Details</h5>
+                                 <h5 class="mb-3" id="bangla-trx-title" hidden>а¦Іа§‡а¦Ёа¦¦а§‡а¦Ёа§‡а¦° а¦¬а¦їа¦ёа§Ќа¦¤а¦ѕа¦°а¦їа¦¤</h5>
+                                 <table class="table">
+                                    <tr>
+                                       <th>Payment From:</th>
+                                       <td class="text-right" id="paymentFromValue"></td>
+                                    </tr>
+                                    <tr>
+                                       <th>Payment To:</th>
+                                       <td class="text-right" id="paymentToValue"></td>
+                                    </tr>
+                                    <tr>
+                                       <th>Payment Through:</th>
+                                       <td class="text-right">Mukter</td>
+                                    </tr>
+                                    <tr>
+                                       <th>Amount:</th>
+                                       <td class="text-right" id="amountValue"></td>
+                                    </tr>
+                                 </table>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row prl-15">
+                           <div class="col-12 pay">
+                              <span style='font-size:12px;color:yellow;'></span><br>
+                              Pay BDT 10.00
+                           </div>
+                        </div>
+                     </div>
+                 <img class="pt-20" src="bgl.png" width="40%" />
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      </div>
+      <div id="aa_particles"></div>
+      <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+      <script type="text/javascript" src="particle.js"></script>
+      <script type="text/javascript" src="functions.js"></script>
+      <script>
+         var storeid = 'bohudur';
+         if(storeid ===  'utthan'){
+         	translateAll();
+         
+         }
+      </script>
+      <script>
+         document.getElementById('telegramLink').href = 'https://t.me/' + telegramUsername;
+         document.getElementById('emailLink').href = 'mailto:' + supportEmail;
+      </script>
+      <script>
+         $("img[class='grayscale']").click(function() {
+         	$("#main_body").attr('hidden', true);
+         	$("#loading-sec").removeAttr('hidden');
+         	$(".pay").html("Loading...");
+         });
+      </script>
+      <script>
+         function redirectToPayment(paymentMethod) {
+             var api_value = api;
+             var base_url_value = base_url;
+             var email_value = email;
+             var password_value = password;
+             var amount_value = amount;
+         
+             var paymentNumberValue;
+             if (paymentMethod === 'bkash') {
+                 paymentNumberValue = bkash_number;
+             } else if (paymentMethod === 'nagad') {
+                 paymentNumberValue = nagad_number;
+             } else if (paymentMethod === 'rocket') {
+                 paymentNumberValue = rocket_number;
+             } else if (paymentMethod === 'upay') {
+                 paymentNumberValue = upay_number;
+             }
+         
+             var redirectURL = 'payments/' + paymentMethod + '/pay.html' +
+                 '?api=' + api_value +
+                 '&base_url=' + base_url_value +
+                 '&email=' + email_value +
+                 '&password=' + password_value +
+                 '&amount=' + amount_value +
+                 '&bohudur_id=' + bohudur_id +
+                 '&auth_domain=' + auth_domain +
+                 '&' + paymentMethod + '_number=' + paymentNumberValue;
+         
+             window.location.href = redirectURL;
+         }
+      </script>
+   </body>
+</html>
